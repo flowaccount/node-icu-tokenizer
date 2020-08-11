@@ -1,6 +1,6 @@
 {
   "name": "@flowaccount/node-icu-tokenizer",
-  "version": "1.0.4",
+  "version": "1.0.7",
   "description": "String Tokenizer for Node.js using ICU's BreakIterators",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/imojiengineering/node-icu-tokenizer.git"
+    "url": "https://github.com/flowaccount/node-icu-tokenizer.git"
   },
   "keywords": [
     "icu",

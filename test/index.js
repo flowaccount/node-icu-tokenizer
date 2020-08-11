@@ -16,7 +16,7 @@ var Tokenizer = require("../index"),
 
     results = tokenizerInstance.tokenize('new emojis as well ✋🏽?', {locale: 'en_US'});
     assert.notEqual(results, null, 'tokenized results');
-    assert.equal(results.length, 7, 'number of tokens 7 -- 2');
+    assert.equal(results.length, 6, 'number of tokens 7 -- 2');
 
     results = tokenizerInstance.tokenize('', {locale: 'en_US'});
     assert.equal(results.length, 0, 'number of tokens 0');

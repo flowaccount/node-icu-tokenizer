@@ -48,7 +48,7 @@
           '<(module_root_dir)/lib/icudt.lib', 
           '<(module_root_dir)/lib/icuin.lib', 
           '<(module_root_dir)/lib/icuio.lib', 
-          '<(module_root_dir)/lib/icule.lib', 
+          # '<(module_root_dir)/lib/icule.lib', 
           '<(module_root_dir)/lib/iculx.lib', 
           '<(module_root_dir)/lib/icutu.lib', 
           '<(module_root_dir)/lib/icuuc.lib'
@@ -60,24 +60,25 @@
       }],
       ['OS == "linux"', {
         'libraries': [ 
-          '<(module_root_dir)/lib/libicudata.so.55', 
-          '<(module_root_dir)/lib/libicui18n.so.55', 
-          '<(module_root_dir)/lib/libicuio.so.55', 
-          '<(module_root_dir)/lib/libicule.so.55', 
-          '<(module_root_dir)/lib/libiculx.so.55', 
-          '<(module_root_dir)/lib/libicutu.so.55', 
-          '<(module_root_dir)/lib/libicuuc.so.55'
+          '<(module_root_dir)/lib/libicudata.so.60', 
+          '<(module_root_dir)/lib/libicui18n.so.60', 
+          '<(module_root_dir)/lib/libicuio.so.60', 
+          # '<(module_root_dir)/lib/libicule.so.60', 
+          '<(module_root_dir)/lib/libiculx.so.60', 
+          '<(module_root_dir)/lib/libicutu.so.60', 
+          '<(module_root_dir)/lib/libicuuc.so.60',
+          '-Wl,-s -Wl,--disable-new-dtags -Wl,-rpath=\'$${ORIGIN}/../../lib\''
         ],
       }],
       ['OS=="mac"', {
           'libraries': [ 
-            '<(module_root_dir)/lib/libicudata.so.55', 
-            '<(module_root_dir)/lib/libicui18n.so.55', 
-            '<(module_root_dir)/lib/libicuio.so.55', 
-            '<(module_root_dir)/lib/libicule.so.55', 
-            '<(module_root_dir)/lib/libiculx.so.55', 
-            '<(module_root_dir)/lib/libicutu.so.55', 
-            '<(module_root_dir)/lib/libicuuc.so.55'
+            '<(module_root_dir)/lib/libicudata.so.60', 
+            '<(module_root_dir)/lib/libicui18n.so.60', 
+            '<(module_root_dir)/lib/libicuio.so.60', 
+            '<(module_root_dir)/lib/libicule.so.60', 
+            '<(module_root_dir)/lib/libiculx.so.60', 
+            '<(module_root_dir)/lib/libicutu.so.60', 
+            '<(module_root_dir)/lib/libicuuc.so.60'
           ],
           'xcode_settings': {
             'GCC_ENABLE_CPP_EXCEPTIONS': 'YES'
