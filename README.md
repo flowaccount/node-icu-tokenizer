@@ -4,39 +4,10 @@ Node.js String Tokenizer using ICU's BreakIterator
 
 See [http://userguide.icu-project.org/boundaryanalysis](http://userguide.icu-project.org/boundaryanalysis) for a rundown on how the BreakIterator works.
 
-Install ICU first:
-
-**OS X**
-```
-brew install icu4c
-brew link icu4c --force
-```
-
-**Linux**
-
-```
-apt-get install libicu-dev
-or 
-yum install libicu-devel
-```
-
-**Manually**
-
-```bash
-curl -LO http://download.icu-project.org/files/icu4c/55.1/icu4c-55_1-src.tgz
-tar xzvf icu4c-55_1-src.tgz
-cd icu/source
-chmod +x runConfigureICU configure install-sh
-./runConfigureICU MacOSX
-make
-sudo make install
-sudo cp -r common/unicode /usr/local/include/
-```
-
 Install the NPM module:
 
 ```
-npm install node-icu-tokenizer
+npm install @flowaccount/node-icu-tokenizer
 ```
 
 Call the tokenizer:
