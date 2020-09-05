@@ -63,8 +63,7 @@
           '<(module_root_dir)/lib/icudt.lib', 
           '<(module_root_dir)/lib/icuin.lib', 
           '<(module_root_dir)/lib/icuio.lib', 
-          # '<(module_root_dir)/lib/icule.lib', 
-          '<(module_root_dir)/lib/iculx.lib', 
+          '<(module_root_dir)/lib/icutest.lib', 
           '<(module_root_dir)/lib/icutu.lib', 
           '<(module_root_dir)/lib/icuuc.lib'
         ],
