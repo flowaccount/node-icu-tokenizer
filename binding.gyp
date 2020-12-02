@@ -31,33 +31,12 @@
       ],
       'conditions': [
         ['OS == "win"', {
-           'conditions': [
-          ['node_with_ltcg=="true"', {
-            'msvs_settings': {
-              'VCCLCompilerTool': {
-                'WholeProgramOptimization': 'true' # /GL, whole program optimization, needed for LTCG
-              },
-              'VCLibrarianTool': {
-                'AdditionalOptions': [
-                  '/LTCG:INCREMENTAL', # incremental link-time code generation
-                ]
-              },
-              'VCLinkerTool': {
-                'OptimizeReferences': 2, # /OPT:REF
-                'EnableCOMDATFolding': 2, # /OPT:ICF
-                'LinkIncremental': 1, # disable incremental linking
-                'AdditionalOptions': [
-                  '/LTCG:INCREMENTAL', # incremental link-time code generation
-                ]
-              }
-            }
-          }]
-        ],
          'defines': [
           'NAPI_DISABLE_CPP_EXCEPTIONS', 
           'NAPI_VERSION=3',
           'VIPS_CPLUSPLUS_EXPORTS',
-          '_ALLOW_KEYWORD_MACROS'
+          '_ALLOW_KEYWORD_MACROS',
+          '_FILE_OFFSET_BITS=64'
         ],
         'libraries': [
           '<(module_root_dir)/lib/icudt.lib', 
@@ -65,7 +44,7 @@
           '<(module_root_dir)/lib/icuio.lib', 
           '<(module_root_dir)/lib/icutest.lib', 
           '<(module_root_dir)/lib/icutu.lib', 
-          '<(module_root_dir)/lib/icuuc.lib'
+          '<(module_root_dir)/lib/icuuc.lib',
         ],
        
         'msvs_disabled_warnings': [
@@ -92,10 +71,11 @@
             '<(module_root_dir)/lib/libicudata.so', 
             '<(module_root_dir)/lib/libicui18n.so', 
             '<(module_root_dir)/lib/libicuio.so', 
-            '<(module_root_dir)/lib/libicule.so', 
+            # '<(module_root_dir)/lib/libicule.so', 
             '<(module_root_dir)/lib/libiculx.so', 
             '<(module_root_dir)/lib/libicutu.so', 
-            '<(module_root_dir)/lib/libicuuc.so'
+            '<(module_root_dir)/lib/libicuuc.so',
+            '-Wl,-s -Wl,--disable-new-dtags -Wl,-rpath=\'$${ORIGIN}/../../lib/\''
           ],
           'xcode_settings': {
             'GCC_ENABLE_CPP_EXCEPTIONS': 'YES'
@@ -118,7 +98,13 @@
           ['OS == "win"', {
             'msvs_settings': {
               'VCCLCompilerTool': {
-                'ExceptionHandling': 1,
+                'DebugInformationFormat': 3, # Generate a PDB
+                'WarningLevel': 3,
+                'BufferSecurityCheck': 'true',
+                'ExceptionHandling': 1, # /EHsc
+                'SuppressStartupBanner': 'true',
+                'WarnAsError': 'false',
+                'RuntimeLibrary': '2',
                 'WholeProgramOptimization': 'true'
               },
               'VCLibrarianTool': {
@@ -131,6 +117,7 @@
                 'OptimizeReferences': 2,
                 'EnableCOMDATFolding': 2,
                 'LinkIncremental': 1,
+                'GenerateDebugInformation': 'true',
                 'AdditionalOptions': [
                   '/LTCG:INCREMENTAL'
                 ]
