@@ -67,19 +67,13 @@
         ],
       }],
       ['OS=="mac"', {
-          'libraries': [ 
-            '<(module_root_dir)/lib/libicudata.so', 
-            '<(module_root_dir)/lib/libicui18n.so', 
-            '<(module_root_dir)/lib/libicuio.so', 
-            # '<(module_root_dir)/lib/libicule.so', 
-            '<(module_root_dir)/lib/libiculx.so', 
-            '<(module_root_dir)/lib/libicutu.so', 
-            '<(module_root_dir)/lib/libicuuc.so',
-            '-Wl,-s -Wl,--disable-new-dtags -Wl,-rpath=\'$${ORIGIN}/../../lib/\''
-          ],
-          'xcode_settings': {
-            'GCC_ENABLE_CPP_EXCEPTIONS': 'YES'
-          }
+      "libraries": ["<!@(icu-config --ldflags)"],
+      "cflags": ["<!(icu-config --cppflags)"],
+      "xcode_settings": {
+        "OTHER_CFLAGS": [
+          "<!(icu-config --cppflags)",
+        ],
+      },
         }]
       ],
       'configurations': {
