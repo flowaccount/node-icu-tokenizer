@@ -1,6 +1,6 @@
 {
   "name": "@flowaccount/node-icu-tokenizer",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "String Tokenizer for Node.js using ICU's BreakIterators",
   "main": "index.js",
   "scripts": {
