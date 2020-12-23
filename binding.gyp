@@ -56,13 +56,13 @@
               '_GLIBCXX_USE_CXX11_ABI=0'
          ],
         'libraries': [
-          '<(module_root_dir)/lib/libicudata.so', 
-          '<(module_root_dir)/lib/libicui18n.so', 
-          '<(module_root_dir)/lib/libicuio.so', 
-          # '<(module_root_dir)/lib/libicule.so', 
-          '<(module_root_dir)/lib/libiculx.so', 
-          '<(module_root_dir)/lib/libicutu.so', 
-          '<(module_root_dir)/lib/libicuuc.so',
+          '<(module_root_dir)/lib/libicudata.so.60', 
+          '<(module_root_dir)/lib/libicui18n.so.60', 
+          '<(module_root_dir)/lib/libicuio.so.60', 
+          # '<(module_root_dir)/lib/libicule.so.60', 
+          '<(module_root_dir)/lib/libiculx.so.60', 
+          '<(module_root_dir)/lib/libicutu.so.60', 
+          '<(module_root_dir)/lib/libicuuc.so.60',
           '-Wl,-s -Wl,--disable-new-dtags -Wl,-rpath=\'$${ORIGIN}/../../lib/\''
         ],
       }],
