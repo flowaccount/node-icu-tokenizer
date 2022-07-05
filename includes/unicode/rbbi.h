@@ -18,6 +18,8 @@
 
 #include "unicode/utypes.h"
 
+#if U_SHOW_CPLUSPLUS_API
+
 /**
  * \file
  * \brief C++ API: Rule Based Break Iterator
@@ -29,7 +31,8 @@
 #include "unicode/udata.h"
 #include "unicode/parseerr.h"
 #include "unicode/schriter.h"
-#include "unicode/uchriter.h"
+
+struct UCPTrie;
 
 U_NAMESPACE_BEGIN
 
@@ -56,44 +59,21 @@ class U_COMMON_API RuleBasedBreakIterator /*U_FINAL*/ : public BreakIterator {
 private:
     /**
      * The UText through which this BreakIterator accesses the text
-     * @internal
+     * @internal (private)
      */
-    UText  *fText;
+    UText  fText;
 
+#ifndef U_HIDE_INTERNAL_API
+public:
+#endif /* U_HIDE_INTERNAL_API */
     /**
-     *   A character iterator that refers to the same text as the UText, above.
-     *   Only included for compatibility with old API, which was based on CharacterIterators.
-     *   Value may be adopted from outside, or one of fSCharIter or fDCharIter, below.
-     */
-    CharacterIterator  *fCharIter;
-
-    /**
-     *   When the input text is provided by a UnicodeString, this will point to
-     *    a characterIterator that wraps that data.  Needed only for the
-     *    implementation of getText(), a backwards compatibility issue.
-     */
-    StringCharacterIterator *fSCharIter;
-
-    /**
-     *  When the input text is provided by a UText, this
-     *    dummy CharacterIterator over an empty string will
-     *    be returned from getText()
-     */
-    UCharCharacterIterator *fDCharIter;
-
-    /**
-     * The rule data for this BreakIterator instance
+     * The rule data for this BreakIterator instance.
+     * Not for general use; Public only for testing purposes.
      * @internal
      */
     RBBIDataWrapper    *fData;
+private:
 
-    /** 
-     *  The iteration state - current position, rule status for the current position,
-     *                        and whether the iterator ran off the end, yielding UBRK_DONE.
-     *                        Current position is pinned to be 0 < position <= text.length.
-     *                        Current position is always set to a boundary.
-     *  @internal
-    */
     /**
       * The current  position of the iterator. Pinned, 0 < fPosition <= text.length.
       * Never has the value UBRK_DONE (-1).
@@ -106,23 +86,10 @@ private:
     int32_t         fRuleStatusIndex;
 
     /**
-      * True when iteration has run off the end, and iterator functions should return UBRK_DONE.
-      */
-    UBool           fDone;
-
-    /**
      *   Cache of previously determined boundary positions.
      */
-  public:    // TODO: debug, return to private.
     class BreakCache;
     BreakCache         *fBreakCache;
-  private:
-    /**
-     * Counter for the number of characters encountered with the "dictionary"
-     *   flag set.
-     * @internal
-     */
-    uint32_t            fDictionaryCharCount;
 
     /**
      *  Cache of boundary positions within a region of text that has been
@@ -136,7 +103,7 @@ private:
      * If present, UStack of LanguageBreakEngine objects that might handle
      * dictionary characters. Searched from top to bottom to find an object to
      * handle a given character.
-     * @internal
+     * @internal (private)
      */
     UStack              *fLanguageBreakEngines;
 
@@ -144,17 +111,46 @@ private:
      *
      * If present, the special LanguageBreakEngine used for handling
      * characters that are in the dictionary set, but not handled by any
-     * LangugageBreakEngine.
-     * @internal
+     * LanguageBreakEngine.
+     * @internal (private)
      */
     UnhandledEngine     *fUnhandledBreakEngine;
 
     /**
-     *
-     * The type of the break iterator, or -1 if it has not been set.
-     * @internal
+     * Counter for the number of characters encountered with the "dictionary"
+     *   flag set.
+     * @internal (private)
      */
-    int32_t             fBreakType;
+    uint32_t            fDictionaryCharCount;
+
+    /**
+     *   A character iterator that refers to the same text as the UText, above.
+     *   Only included for compatibility with old API, which was based on CharacterIterators.
+     *   Value may be adopted from outside, or one of fSCharIter or fDCharIter, below.
+     */
+    CharacterIterator  *fCharIter;
+
+    /**
+     *   When the input text is provided by a UnicodeString, this will point to
+     *    a characterIterator that wraps that data.  Needed only for the
+     *    implementation of getText(), a backwards compatibility issue.
+     */
+    StringCharacterIterator fSCharIter;
+
+    /**
+      * True when iteration has run off the end, and iterator functions should return UBRK_DONE.
+      */
+    UBool           fDone;
+
+    /**
+     *  Array of look-ahead tentative results.
+     */
+    int32_t *fLookAheadMatches;
+
+    /**
+     *  A flag to indicate if phrase based breaking is enabled.
+     */
+    UBool fIsPhraseBreaking;
 
     //=======================================================================
     // constructors
@@ -168,9 +164,24 @@ private:
      *
      *             The break iterator adopts the memory, and will
      *             free it when done.
-     * @internal
+     * @internal (private)
      */
     RuleBasedBreakIterator(RBBIDataHeader* data, UErrorCode &status);
+
+    /**
+     * This constructor uses the udata interface to create a BreakIterator
+     * whose internal tables live in a memory-mapped file.  "image" is an
+     * ICU UDataMemory handle for the pre-compiled break iterator tables.
+     * @param image handle to the memory image for the break iterator data.
+     *        Ownership of the UDataMemory handle passes to the Break Iterator,
+     *        which will be responsible for closing it when it is no longer needed.
+     * @param status Information on any errors encountered.
+     * @param isPhraseBreaking true if phrase based breaking is required, otherwise false.
+     * @see udata_open
+     * @see #getBinaryRules
+     * @internal (private)
+     */
+    RuleBasedBreakIterator(UDataMemory* image, UBool isPhraseBreaking, UErrorCode &status);
 
     /** @internal */
     friend class RBBIRuleBuilder;
@@ -206,17 +217,17 @@ public:
                              UErrorCode            &status);
 
     /**
-     * Contruct a RuleBasedBreakIterator from a set of precompiled binary rules.
+     * Construct a RuleBasedBreakIterator from a set of precompiled binary rules.
      * Binary rules are obtained from RulesBasedBreakIterator::getBinaryRules().
      * Construction of a break iterator in this way is substantially faster than
-     * constuction from source rules.
+     * construction from source rules.
      *
      * Ownership of the storage containing the compiled rules remains with the
      * caller of this function.  The compiled rules must not be  modified or
      * deleted during the life of the break iterator.
      *
      * The compiled rules are not compatible across different major versions of ICU.
-     * The compiled rules are comaptible only between machines with the same
+     * The compiled rules are compatible only between machines with the same
      * byte ordering (little or big endian) and the same base character set family
      * (ASCII or EBCDIC).
      *
@@ -262,35 +273,35 @@ public:
     RuleBasedBreakIterator& operator=(const RuleBasedBreakIterator& that);
 
     /**
-     * Equality operator.  Returns TRUE if both BreakIterators are of the
+     * Equality operator.  Returns true if both BreakIterators are of the
      * same class, have the same behavior, and iterate over the same text.
      * @param that The BreakIterator to be compared for equality
-     * @return TRUE if both BreakIterators are of the
+     * @return true if both BreakIterators are of the
      * same class, have the same behavior, and iterate over the same text.
      *  @stable ICU 2.0
      */
-    virtual UBool operator==(const BreakIterator& that) const;
+    virtual bool operator==(const BreakIterator& that) const override;
 
     /**
-     * Not-equal operator.  If operator== returns TRUE, this returns FALSE,
+     * Not-equal operator.  If operator== returns true, this returns false,
      * and vice versa.
      * @param that The BreakIterator to be compared for inequality
-     * @return TRUE if both BreakIterators are not same.
+     * @return true if both BreakIterators are not same.
      *  @stable ICU 2.0
      */
-    UBool operator!=(const BreakIterator& that) const;
+    inline bool operator!=(const BreakIterator& that) const;
 
     /**
      * Returns a newly-constructed RuleBasedBreakIterator with the same
      * behavior, and iterating over the same text, as this one.
      * Differs from the copy constructor in that it is polymorphic, and
      * will correctly clone (copy) a derived class.
-     * clone() is thread safe.  Multiple threads may simultaeneously
+     * clone() is thread safe.  Multiple threads may simultaneously
      * clone the same source break iterator.
      * @return a newly-constructed RuleBasedBreakIterator
      * @stable ICU 2.0
      */
-    virtual BreakIterator* clone() const;
+    virtual RuleBasedBreakIterator* clone() const override;
 
     /**
      * Compute a hash code for this BreakIterator
@@ -335,7 +346,7 @@ public:
      * @return An iterator over the text being analyzed.
      * @stable ICU 2.0
      */
-    virtual  CharacterIterator& getText(void) const;
+    virtual  CharacterIterator& getText(void) const override;
 
 
     /**
@@ -352,7 +363,7 @@ public:
       *           UText was provided, it will always be returned.
       * @stable ICU 3.4
       */
-     virtual UText *getUText(UText *fillIn, UErrorCode &status) const;
+     virtual UText *getUText(UText *fillIn, UErrorCode &status) const override;
 
     /**
      * Set the iterator to analyze a new piece of text.  This function resets
@@ -361,7 +372,7 @@ public:
      * takes ownership of the character iterator.  The caller MUST NOT delete it!
      *  @stable ICU 2.0
      */
-    virtual void adoptText(CharacterIterator* newText);
+    virtual void adoptText(CharacterIterator* newText) override;
 
     /**
      * Set the iterator to analyze a new piece of text.  This function resets
@@ -374,7 +385,7 @@ public:
      * @param newText The text to analyze.
      *  @stable ICU 2.0
      */
-    virtual void setText(const UnicodeString& newText);
+    virtual void setText(const UnicodeString& newText) override;
 
     /**
      * Reset the break iterator to operate over the text represented by
@@ -389,21 +400,21 @@ public:
      * @param status  Receives any error codes.
      * @stable ICU 3.4
      */
-    virtual void  setText(UText *text, UErrorCode &status);
+    virtual void  setText(UText *text, UErrorCode &status) override;
 
     /**
      * Sets the current iteration position to the beginning of the text, position zero.
      * @return The offset of the beginning of the text, zero.
      *  @stable ICU 2.0
      */
-    virtual int32_t first(void);
+    virtual int32_t first(void) override;
 
     /**
      * Sets the current iteration position to the end of the text.
      * @return The text's past-the-end offset.
      *  @stable ICU 2.0
      */
-    virtual int32_t last(void);
+    virtual int32_t last(void) override;
 
     /**
      * Advances the iterator either forward or backward the specified number of steps.
@@ -415,21 +426,21 @@ public:
      * the current one.
      *  @stable ICU 2.0
      */
-    virtual int32_t next(int32_t n);
+    virtual int32_t next(int32_t n) override;
 
     /**
      * Advances the iterator to the next boundary position.
      * @return The position of the first boundary after this one.
      *  @stable ICU 2.0
      */
-    virtual int32_t next(void);
+    virtual int32_t next(void) override;
 
     /**
      * Moves the iterator backwards, to the last boundary preceding this one.
      * @return The position of the last boundary position preceding this one.
      *  @stable ICU 2.0
      */
-    virtual int32_t previous(void);
+    virtual int32_t previous(void) override;
 
     /**
      * Sets the iterator to refer to the first boundary position following
@@ -438,7 +449,7 @@ public:
      * @return The position of the first break after the current position.
      *  @stable ICU 2.0
      */
-    virtual int32_t following(int32_t offset);
+    virtual int32_t following(int32_t offset) override;
 
     /**
      * Sets the iterator to refer to the last boundary position before the
@@ -447,17 +458,17 @@ public:
      * @return The position of the last boundary before the starting position.
      *  @stable ICU 2.0
      */
-    virtual int32_t preceding(int32_t offset);
+    virtual int32_t preceding(int32_t offset) override;
 
     /**
-     * Returns true if the specfied position is a boundary position.  As a side
+     * Returns true if the specified position is a boundary position.  As a side
      * effect, leaves the iterator pointing to the first boundary position at
      * or after "offset".
      * @param offset the offset to check.
      * @return True if "offset" is a boundary position.
      *  @stable ICU 2.0
      */
-    virtual UBool isBoundary(int32_t offset);
+    virtual UBool isBoundary(int32_t offset) override;
 
     /**
      * Returns the current iteration position. Note that UBRK_DONE is never
@@ -467,12 +478,12 @@ public:
      * @return The current iteration position.
      * @stable ICU 2.0
      */
-    virtual int32_t current(void) const;
+    virtual int32_t current(void) const override;
 
 
     /**
-     * Return the status tag from the break rule that determined the most recently
-     * returned break position.  For break rules that do not specify a
+     * Return the status tag from the break rule that determined the boundary at
+     * the current iteration position.  For break rules that do not specify a
      * status, a default value of 0 is returned.  If more than one break rule
      * would cause a boundary to be located at some position in the text,
      * the numerically largest of the applicable status values is returned.
@@ -489,25 +500,23 @@ public:
      * position from <code>next()</code>, <code>previous()</code>, or
      * any other break iterator functions that returns a boundary position.
      * <p>
+     * Note that <code>getRuleStatus()</code> returns the value corresponding to
+     * <code>current()</code> index even after <code>next()</code> has returned DONE.
+     * <p>
      * When creating custom break rules, one is free to define whatever
      * status values may be convenient for the application.
      * <p>
-     * Note: this function is not thread safe.  It should not have been
-     *       declared const, and the const remains only for compatibility
-     *       reasons.  (The function is logically const, but not bit-wise const).
-     *   TODO: check this. Probably thread safe now.
-     * <p>
-     * @return the status from the break rule that determined the most recently
-     * returned break position.
+     * @return the status from the break rule that determined the boundary
+     * at the current iteration position.
      *
      * @see UWordBreak
      * @stable ICU 2.2
      */
-    virtual int32_t getRuleStatus() const;
+    virtual int32_t getRuleStatus() const override;
 
    /**
-    * Get the status (tag) values from the break rule(s) that determined the most
-    * recently returned break position.
+    * Get the status (tag) values from the break rule(s) that determined the boundary
+    * at the current iteration position.
     * <p>
     * The returned status value(s) are stored into an array provided by the caller.
     * The values are stored in sorted (ascending) order.
@@ -518,17 +527,17 @@ public:
     * @param fillInVec an array to be filled in with the status values.
     * @param capacity  the length of the supplied vector.  A length of zero causes
     *                  the function to return the number of status values, in the
-    *                  normal way, without attemtping to store any values.
+    *                  normal way, without attempting to store any values.
     * @param status    receives error codes.
-    * @return          The number of rule status values from rules that determined
-    *                  the most recent boundary returned by the break iterator.
+    * @return          The number of rule status values from the rules that determined
+    *                  the boundary at the current iteration position.
     *                  In the event of a U_BUFFER_OVERFLOW_ERROR, the return value
     *                  is the total number of status values that were available,
     *                  not the reduced number that were actually returned.
     * @see getRuleStatus
     * @stable ICU 3.0
     */
-    virtual int32_t getRuleStatusVec(int32_t *fillInVec, int32_t capacity, UErrorCode &status);
+    virtual int32_t getRuleStatusVec(int32_t *fillInVec, int32_t capacity, UErrorCode &status) override;
 
     /**
      * Returns a unique class ID POLYMORPHICALLY.  Pure virtual override.
@@ -541,7 +550,7 @@ public:
      *                  other classes have different class IDs.
      * @stable ICU 2.0
      */
-    virtual UClassID getDynamicClassID(void) const;
+    virtual UClassID getDynamicClassID(void) const override;
 
     /**
      * Returns the class ID for this class.  This is useful only for
@@ -556,12 +565,13 @@ public:
      */
     static UClassID U_EXPORT2 getStaticClassID(void);
 
+#ifndef U_FORCE_HIDE_DEPRECATED_API
     /**
      * Deprecated functionality. Use clone() instead.
      *
      * Create a clone (copy) of this break iterator in memory provided
      *  by the caller.  The idea is to increase performance by avoiding
-     *  a storage allocation.  Use of this functoin is NOT RECOMMENDED.
+     *  a storage allocation.  Use of this function is NOT RECOMMENDED.
      *  Performance gains are minimal, and correct buffer management is
      *  tricky.  Use clone() instead.
      *
@@ -574,7 +584,7 @@ public:
      *                     storage for the cloned object.
      *
      * @param status       Error status.  U_SAFECLONE_ALLOCATED_WARNING will be
-     *                     returned if the the provided buffer was too small, and
+     *                     returned if the provided buffer was too small, and
      *                     the clone was therefore put on the heap.
      *
      * @return  Pointer to the clone object.  This may differ from the stackBuffer
@@ -582,10 +592,10 @@ public:
      *          or if the stackBuffer was too small to hold the clone.
      * @deprecated ICU 52. Use clone() instead.
      */
-    virtual BreakIterator *  createBufferClone(void *stackBuffer,
-                                               int32_t &BufferSize,
-                                               UErrorCode &status);
-
+    virtual RuleBasedBreakIterator *createBufferClone(void *stackBuffer,
+                                                      int32_t &BufferSize,
+                                                      UErrorCode &status) override;
+#endif  // U_FORCE_HIDE_DEPRECATED_API
 
     /**
      * Return the binary form of compiled break rules,
@@ -597,7 +607,7 @@ public:
      * The binary data can only be used with the same version of ICU
      *  and on the same platform type (processor endian-ness)
      *
-     * @param length Returns the length of the binary data.  (Out paramter.)
+     * @param length Returns the length of the binary data.  (Out parameter.)
      *
      * @return   A pointer to the binary (compiled) rule data.  The storage
      *           belongs to the RulesBasedBreakIterator object, not the
@@ -631,7 +641,7 @@ public:
      *
      * @stable ICU 49
      */
-    virtual RuleBasedBreakIterator &refreshInputText(UText *input, UErrorCode &status);
+    virtual RuleBasedBreakIterator &refreshInputText(UText *input, UErrorCode &status) override;
 
 
 private:
@@ -641,31 +651,26 @@ private:
     /**
      * Dumps caches and performs other actions associated with a complete change
      * in text or iteration position.
-     * @internal
+     * @internal (private)
      */
     void reset(void);
 
     /**
-      * Set the type of the break iterator.
-      * @internal
-      */
-    void setBreakType(int32_t type);
-
-    /**
       * Common initialization function, used by constructors and bufferClone.
-      * @internal
+      * @internal (private)
       */
     void init(UErrorCode &status);
 
     /**
-     * Iterate backwards from an arbitrary position in the input text using the Safe Reverse rules.
+     * Iterate backwards from an arbitrary position in the input text using the
+     * synthesized Safe Reverse rules.
      * This locates a "Safe Position" from which the forward break rules
      * will operate correctly. A Safe Position is not necessarily a boundary itself.
      *
      * @param fromPosition the position in the input text to begin the iteration.
-     * @internal
+     * @internal (private)
      */
-    int32_t handlePrevious(int32_t fromPosition);
+    int32_t handleSafePrevious(int32_t fromPosition);
 
     /**
      * Find a rule-based boundary by running the state machine.
@@ -677,8 +682,30 @@ private:
      *                         If > 0, the segment will be further subdivided
      *    fRuleStatusIndex     Info from the state table indicating which rules caused the boundary.
      *
-     * @internal
+     * @internal (private)
      */
+    int32_t handleNext();
+
+    /*
+     * Templatized version of handleNext() and handleSafePrevious().
+     *
+     * There will be exactly four instantiations, two each for 8 and 16 bit tables,
+     * two each for 8 and 16 bit trie.
+     * Having separate instantiations for the table types keeps conditional tests of
+     * the table type out of the inner loops, at the expense of replicated code.
+     *
+     * The template parameter for the Trie access function is a value, not a type.
+     * Doing it this way, the compiler will inline the Trie function in the
+     * expanded functions. (Both the 8 and 16 bit access functions have the same type
+     * signature)
+     */
+
+    typedef uint16_t (*PTrieFunc)(const UCPTrie *, UChar32);
+
+    template<typename RowType, PTrieFunc trieFunc>
+    int32_t handleSafePrevious(int32_t fromPosition);
+
+    template<typename RowType, PTrieFunc trieFunc>
     int32_t handleNext();
 
 
@@ -686,7 +713,7 @@ private:
      * This function returns the appropriate LanguageBreakEngine for a
      * given character c.
      * @param c         A character in the dictionary set
-     * @internal
+     * @internal (private)
      */
     const LanguageBreakEngine *getLanguageBreakEngine(UChar32 c);
 
@@ -697,6 +724,12 @@ private:
      *   @internal
      */
      void dumpCache();
+
+    /**
+     * Debugging function only.
+     * @internal
+     */
+    void dumpTables();
 #endif  /* U_HIDE_INTERNAL_API */
 };
 
@@ -706,12 +739,14 @@ private:
 //
 //------------------------------------------------------------------------------
 
-inline UBool RuleBasedBreakIterator::operator!=(const BreakIterator& that) const {
+inline bool RuleBasedBreakIterator::operator!=(const BreakIterator& that) const {
     return !operator==(that);
 }
 
 U_NAMESPACE_END
 
 #endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+
+#endif /* U_SHOW_CPLUSPLUS_API */
 
 #endif

@@ -4,13 +4,13 @@
       'target_name': 'node-icu-tokenizer',
       'sources': [ 'node-icu-tokenizer.cpp' ],
       'cflags_cc': [
-        '-std=c++0x',
+        '-std=c++17',
         '-fexceptions',
         '-Wall',
         '-O3'
       ],
       'xcode_settings': {
-        'CLANG_CXX_LANGUAGE_STANDARD': 'c++11',
+        'CLANG_CXX_LANGUAGE_STANDARD': 'c++17',
         'CLANG_CXX_LIBRARY': 'libc++',
         'MACOSX_DEPLOYMENT_TARGET': '10.7',
         'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
@@ -56,13 +56,14 @@
               '_GLIBCXX_USE_CXX11_ABI=0'
          ],
         'libraries': [
-          '<(module_root_dir)/lib/libicudata.so.60', 
-          '<(module_root_dir)/lib/libicui18n.so.60', 
-          '<(module_root_dir)/lib/libicuio.so.60', 
-          # '<(module_root_dir)/lib/libicule.so.60', 
-          '<(module_root_dir)/lib/libiculx.so.60', 
-          '<(module_root_dir)/lib/libicutu.so.60', 
-          '<(module_root_dir)/lib/libicuuc.so.60',
+          '<(module_root_dir)/lib/libicudata.so.71',
+          '<(module_root_dir)/lib/libicui18n.so.71', 
+          '<(module_root_dir)/lib/libicuio.so.71', 
+          # '<(module_root_dir)/lib/libicule.so.71', 
+          # '<(module_root_dir)/lib/libiculx.so.71', 
+          '<(module_root_dir)/lib/libicutest.so.71',
+          '<(module_root_dir)/lib/libicutu.so.71',
+          '<(module_root_dir)/lib/libicuuc.so.71',
           '-Wl,-s -Wl,--disable-new-dtags -Wl,-rpath=\'$${ORIGIN}/../../lib/\''
         ],
       }],

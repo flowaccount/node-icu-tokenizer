@@ -8,6 +8,9 @@
 #define __CASEMAP_H__
 
 #include "unicode/utypes.h"
+
+#if U_SHOW_CPLUSPLUS_API
+
 #include "unicode/stringpiece.h"
 #include "unicode/uobject.h"
 
@@ -18,8 +21,6 @@
 
 U_NAMESPACE_BEGIN
 
-#ifndef U_HIDE_DRAFT_API
-
 class BreakIterator;
 class ByteSink;
 class Edits;
@@ -27,7 +28,7 @@ class Edits;
 /**
  * Low-level C++ case mapping functions.
  *
- * @draft ICU 59
+ * @stable ICU 59
  */
 class U_COMMON_API CaseMap U_FINAL : public UMemory {
 public:
@@ -59,7 +60,7 @@ public:
      *         the full length is returned and a U_BUFFER_OVERFLOW_ERROR is set.
      *
      * @see u_strToLower
-     * @draft ICU 59
+     * @stable ICU 59
      */
      static int32_t toLower(
             const char *locale, uint32_t options,
@@ -95,7 +96,7 @@ public:
      *         the full length is returned and a U_BUFFER_OVERFLOW_ERROR is set.
      *
      * @see u_strToUpper
-     * @draft ICU 59
+     * @stable ICU 59
      */
     static int32_t toUpper(
             const char *locale, uint32_t options,
@@ -146,7 +147,7 @@ public:
      *
      * @see u_strToTitle
      * @see ucasemap_toTitle
-     * @draft ICU 59
+     * @stable ICU 59
      */
     static int32_t toTitle(
             const char *locale, uint32_t options, BreakIterator *iter,
@@ -188,7 +189,7 @@ public:
      *         the full length is returned and a U_BUFFER_OVERFLOW_ERROR is set.
      *
      * @see u_strFoldCase
-     * @draft ICU 59
+     * @stable ICU 59
      */
     static int32_t fold(
             uint32_t options,
@@ -215,7 +216,7 @@ public:
      *                  which must not indicate a failure before the function call.
      *
      * @see ucasemap_utf8ToLower
-     * @draft ICU 60
+     * @stable ICU 60
      */
     static void utf8ToLower(
             const char *locale, uint32_t options,
@@ -241,7 +242,7 @@ public:
      *                  which must not indicate a failure before the function call.
      *
      * @see ucasemap_utf8ToUpper
-     * @draft ICU 60
+     * @stable ICU 60
      */
     static void utf8ToUpper(
             const char *locale, uint32_t options,
@@ -281,7 +282,7 @@ public:
      *                  which must not indicate a failure before the function call.
      *
      * @see ucasemap_utf8ToTitle
-     * @draft ICU 60
+     * @stable ICU 60
      */
     static void utf8ToTitle(
             const char *locale, uint32_t options, BreakIterator *iter,
@@ -312,7 +313,7 @@ public:
      *                  which must not indicate a failure before the function call.
      *
      * @see ucasemap_utf8FoldCase
-     * @draft ICU 60
+     * @stable ICU 60
      */
     static void utf8Fold(
             uint32_t options,
@@ -347,7 +348,7 @@ public:
      *         the full length is returned and a U_BUFFER_OVERFLOW_ERROR is set.
      *
      * @see ucasemap_utf8ToLower
-     * @draft ICU 59
+     * @stable ICU 59
      */
     static int32_t utf8ToLower(
             const char *locale, uint32_t options,
@@ -383,7 +384,7 @@ public:
      *         the full length is returned and a U_BUFFER_OVERFLOW_ERROR is set.
      *
      * @see ucasemap_utf8ToUpper
-     * @draft ICU 59
+     * @stable ICU 59
      */
     static int32_t utf8ToUpper(
             const char *locale, uint32_t options,
@@ -433,7 +434,7 @@ public:
      *         the full length is returned and a U_BUFFER_OVERFLOW_ERROR is set.
      *
      * @see ucasemap_utf8ToTitle
-     * @draft ICU 59
+     * @stable ICU 59
      */
     static int32_t utf8ToTitle(
             const char *locale, uint32_t options, BreakIterator *iter,
@@ -475,7 +476,7 @@ public:
      *         the full length is returned and a U_BUFFER_OVERFLOW_ERROR is set.
      *
      * @see ucasemap_utf8FoldCase
-     * @draft ICU 59
+     * @stable ICU 59
      */
     static int32_t utf8Fold(
             uint32_t options,
@@ -489,8 +490,8 @@ private:
     CaseMap &operator=(const CaseMap &other) = delete;
 };
 
-#endif  // U_HIDE_DRAFT_API
-
 U_NAMESPACE_END
+
+#endif /* U_SHOW_CPLUSPLUS_API */
 
 #endif  // __CASEMAP_H__
