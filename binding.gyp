@@ -46,7 +46,18 @@
           '<(module_root_dir)/lib/windows/icutu.lib', 
           '<(module_root_dir)/lib/windows/icuuc.lib',
         ],
-       
+       "copies": [
+          {
+            "destination": "<(module_root_dir)/build/Release/",
+            "files": [
+              '<(module_root_dir)/lib/windows/icudt71.dll', 
+              '<(module_root_dir)/lib/windows/icuin71.dll', 
+              '<(module_root_dir)/lib/windows/icuio71.dll', 
+              '<(module_root_dir)/lib/windows/icutu71.dll', 
+              '<(module_root_dir)/lib/windows/icuuc71.dll',
+            ]
+          }
+        ],
         'msvs_disabled_warnings': [
           4275
         ]
@@ -59,8 +70,6 @@
           '<(module_root_dir)/lib/linux/libicudata.so.71',
           '<(module_root_dir)/lib/linux/libicui18n.so.71', 
           '<(module_root_dir)/lib/linux/libicuio.so.71', 
-          # '<(module_root_dir)/lib/linux/libicule.so.71', 
-          # '<(module_root_dir)/lib/linux/libiculx.so.71', 
           '<(module_root_dir)/lib/linux/libicutest.so.71',
           '<(module_root_dir)/lib/linux/libicutu.so.71',
           '<(module_root_dir)/lib/linux/libicuuc.so.71',
