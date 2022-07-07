@@ -39,12 +39,12 @@
           '_FILE_OFFSET_BITS=64'
         ],
         'libraries': [
+          '<(module_root_dir)/lib/windows/icudt.lib', 
+          '<(module_root_dir)/lib/windows/icuin.lib', 
           '<(module_root_dir)/lib/windows/icuio.lib', 
           '<(module_root_dir)/lib/windows/icutest.lib', 
           '<(module_root_dir)/lib/windows/icutu.lib', 
-          '<(module_root_dir)/lib/windows/icuuc.lib', 
-          '<(module_root_dir)/lib/windows/icudt.lib', 
-          '<(module_root_dir)/lib/windows/icuin.lib',
+          '<(module_root_dir)/lib/windows/icuuc.lib',
         ],
        
         'msvs_disabled_warnings': [
@@ -64,7 +64,7 @@
           '<(module_root_dir)/lib/linux/libicutest.so.71',
           '<(module_root_dir)/lib/linux/libicutu.so.71',
           '<(module_root_dir)/lib/linux/libicuuc.so.71',
-          '-Wl,-s -Wl,--disable-new-dtags -Wl,-rpath=\'$${ORIGIN}/../../lib/\''
+          '-Wl,-s -Wl,--disable-new-dtags -Wl,-rpath=\'$${ORIGIN}/../../lib/linux\''
         ],
       }],
       ['OS=="mac"', {
