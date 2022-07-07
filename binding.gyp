@@ -39,12 +39,12 @@
           '_FILE_OFFSET_BITS=64'
         ],
         'libraries': [
-          '<(module_root_dir)/lib/icudt.lib', 
-          '<(module_root_dir)/lib/icuin.lib', 
-          '<(module_root_dir)/lib/icuio.lib', 
-          '<(module_root_dir)/lib/icutest.lib', 
-          '<(module_root_dir)/lib/icutu.lib', 
-          '<(module_root_dir)/lib/icuuc.lib',
+          '<(module_root_dir)/lib/windows/icudt.lib', 
+          '<(module_root_dir)/lib/windows/icuin.lib', 
+          '<(module_root_dir)/lib/windows/icuio.lib', 
+          '<(module_root_dir)/lib/windows/icutest.lib', 
+          '<(module_root_dir)/lib/windows/icutu.lib', 
+          '<(module_root_dir)/lib/windows/icuuc.lib',
         ],
        
         'msvs_disabled_warnings': [
