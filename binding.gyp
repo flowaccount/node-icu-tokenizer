@@ -39,12 +39,12 @@
           '_FILE_OFFSET_BITS=64'
         ],
         'libraries': [
-          '<(module_root_dir)/lib/icudt.lib', 
-          '<(module_root_dir)/lib/icuin.lib', 
-          '<(module_root_dir)/lib/icuio.lib', 
-          '<(module_root_dir)/lib/icutest.lib', 
-          '<(module_root_dir)/lib/icutu.lib', 
-          '<(module_root_dir)/lib/icuuc.lib',
+          '<(module_root_dir)/lib/windows/icuio.lib', 
+          '<(module_root_dir)/lib/windows/icutest.lib', 
+          '<(module_root_dir)/lib/windows/icutu.lib', 
+          '<(module_root_dir)/lib/windows/icuuc.lib', 
+          '<(module_root_dir)/lib/windows/icudt.lib', 
+          '<(module_root_dir)/lib/windows/icuin.lib',
         ],
        
         'msvs_disabled_warnings': [
@@ -56,14 +56,14 @@
               '_GLIBCXX_USE_CXX11_ABI=0'
          ],
         'libraries': [
-          '<(module_root_dir)/lib/libicudata.so.71',
-          '<(module_root_dir)/lib/libicui18n.so.71', 
-          '<(module_root_dir)/lib/libicuio.so.71', 
-          # '<(module_root_dir)/lib/libicule.so.71', 
-          # '<(module_root_dir)/lib/libiculx.so.71', 
-          '<(module_root_dir)/lib/libicutest.so.71',
-          '<(module_root_dir)/lib/libicutu.so.71',
-          '<(module_root_dir)/lib/libicuuc.so.71',
+          '<(module_root_dir)/lib/linux/libicudata.so.71',
+          '<(module_root_dir)/lib/linux/libicui18n.so.71', 
+          '<(module_root_dir)/lib/linux/libicuio.so.71', 
+          # '<(module_root_dir)/lib/linux/libicule.so.71', 
+          # '<(module_root_dir)/lib/linux/libiculx.so.71', 
+          '<(module_root_dir)/lib/linux/libicutest.so.71',
+          '<(module_root_dir)/lib/linux/libicutu.so.71',
+          '<(module_root_dir)/lib/linux/libicuuc.so.71',
           '-Wl,-s -Wl,--disable-new-dtags -Wl,-rpath=\'$${ORIGIN}/../../lib/\''
         ],
       }],
