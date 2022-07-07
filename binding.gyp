@@ -59,8 +59,6 @@
           '<(module_root_dir)/lib/linux/libicudata.so.71',
           '<(module_root_dir)/lib/linux/libicui18n.so.71', 
           '<(module_root_dir)/lib/linux/libicuio.so.71', 
-          # '<(module_root_dir)/lib/linux/libicule.so.71', 
-          # '<(module_root_dir)/lib/linux/libiculx.so.71', 
           '<(module_root_dir)/lib/linux/libicutest.so.71',
           '<(module_root_dir)/lib/linux/libicutu.so.71',
           '<(module_root_dir)/lib/linux/libicuuc.so.71',
