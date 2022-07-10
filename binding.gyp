@@ -12,7 +12,7 @@
       'xcode_settings': {
         'CLANG_CXX_LANGUAGE_STANDARD': 'c++17',
         'CLANG_CXX_LIBRARY': 'libc++',
-        'MACOSX_DEPLOYMENT_TARGET': '10.7',
+        'MACOSX_DEPLOYMENT_TARGET': '12.0',
         'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
         'GCC_ENABLE_CPP_RTTI': 'YES',
         'OTHER_CPLUSPLUSFLAGS': [
@@ -77,14 +77,14 @@
         ],
       }],
       ['OS=="mac"', {
-      "libraries": ["<!@(icu-config --ldflags)"],
-      "cflags": ["<!(icu-config --cppflags)"],
-      "xcode_settings": {
-        "OTHER_CFLAGS": [
-          "<!(icu-config --cppflags)",
+        "libraries": [
+          '<(module_root_dir)/lib/osx/libicudata.a',
+          '<(module_root_dir)/lib/osx/libicui18n.a', 
+          '<(module_root_dir)/lib/osx/libicuio.a', 
+          '<(module_root_dir)/lib/osx/libicutu.a',
+          '<(module_root_dir)/lib/osx/libicuuc.a'
         ],
-      },
-        }]
+      }]
       ],
       'configurations': {
       'Release': {
