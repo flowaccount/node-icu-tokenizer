@@ -4,15 +4,15 @@
       'target_name': 'node-icu-tokenizer',
       'sources': [ 'node-icu-tokenizer.cpp' ],
       'cflags_cc': [
-        '-std=c++0x',
+        '-std=c++17',
         '-fexceptions',
         '-Wall',
         '-O3'
       ],
       'xcode_settings': {
-        'CLANG_CXX_LANGUAGE_STANDARD': 'c++11',
+        'CLANG_CXX_LANGUAGE_STANDARD': 'c++17',
         'CLANG_CXX_LIBRARY': 'libc++',
-        'MACOSX_DEPLOYMENT_TARGET': '10.7',
+        'MACOSX_DEPLOYMENT_TARGET': '12.0',
         'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
         'GCC_ENABLE_CPP_RTTI': 'YES',
         'OTHER_CPLUSPLUSFLAGS': [
@@ -39,14 +39,25 @@
           '_FILE_OFFSET_BITS=64'
         ],
         'libraries': [
-          '<(module_root_dir)/lib/icudt.lib', 
-          '<(module_root_dir)/lib/icuin.lib', 
-          '<(module_root_dir)/lib/icuio.lib', 
-          '<(module_root_dir)/lib/icutest.lib', 
-          '<(module_root_dir)/lib/icutu.lib', 
-          '<(module_root_dir)/lib/icuuc.lib',
+          '<(module_root_dir)/lib/windows/icudt.lib', 
+          '<(module_root_dir)/lib/windows/icuin.lib', 
+          '<(module_root_dir)/lib/windows/icuio.lib', 
+          '<(module_root_dir)/lib/windows/icutest.lib', 
+          '<(module_root_dir)/lib/windows/icutu.lib', 
+          '<(module_root_dir)/lib/windows/icuuc.lib',
         ],
-       
+       "copies": [
+          {
+            "destination": "<(module_root_dir)/build/Release/",
+            "files": [
+              '<(module_root_dir)/lib/windows/icudt71.dll', 
+              '<(module_root_dir)/lib/windows/icuin71.dll', 
+              '<(module_root_dir)/lib/windows/icuio71.dll', 
+              '<(module_root_dir)/lib/windows/icutu71.dll', 
+              '<(module_root_dir)/lib/windows/icuuc71.dll',
+            ]
+          }
+        ],
         'msvs_disabled_warnings': [
           4275
         ]
@@ -56,25 +67,24 @@
               '_GLIBCXX_USE_CXX11_ABI=0'
          ],
         'libraries': [
-          '<(module_root_dir)/lib/libicudata.so.60', 
-          '<(module_root_dir)/lib/libicui18n.so.60', 
-          '<(module_root_dir)/lib/libicuio.so.60', 
-          # '<(module_root_dir)/lib/libicule.so.60', 
-          '<(module_root_dir)/lib/libiculx.so.60', 
-          '<(module_root_dir)/lib/libicutu.so.60', 
-          '<(module_root_dir)/lib/libicuuc.so.60',
-          '-Wl,-s -Wl,--disable-new-dtags -Wl,-rpath=\'$${ORIGIN}/../../lib/\''
+          '<(module_root_dir)/lib/linux/libicudata.so.71',
+          '<(module_root_dir)/lib/linux/libicui18n.so.71', 
+          '<(module_root_dir)/lib/linux/libicuio.so.71', 
+          '<(module_root_dir)/lib/linux/libicutest.so.71',
+          '<(module_root_dir)/lib/linux/libicutu.so.71',
+          '<(module_root_dir)/lib/linux/libicuuc.so.71',
+          '-Wl,-s -Wl,--disable-new-dtags -Wl,-rpath=\'$${ORIGIN}/../../lib/linux\''
         ],
       }],
       ['OS=="mac"', {
-      "libraries": ["<!@(icu-config --ldflags)"],
-      "cflags": ["<!(icu-config --cppflags)"],
-      "xcode_settings": {
-        "OTHER_CFLAGS": [
-          "<!(icu-config --cppflags)",
+        "libraries": [
+          '<(module_root_dir)/lib/osx/libicudata.a',
+          '<(module_root_dir)/lib/osx/libicui18n.a', 
+          '<(module_root_dir)/lib/osx/libicuio.a', 
+          '<(module_root_dir)/lib/osx/libicutu.a',
+          '<(module_root_dir)/lib/osx/libicuuc.a'
         ],
-      },
-        }]
+      }]
       ],
       'configurations': {
       'Release': {

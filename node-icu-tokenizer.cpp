@@ -33,14 +33,14 @@ Napi::Array GetWordBoundaryPositions(const Napi::CallbackInfo& info) {
     country  = strtok((char *)localeArg, delim);
     const char* language;
     language = strtok(NULL, delim);
-    Locale icuLocale(language, country);
+    icu_71::Locale icuLocale(language, country);
 
 
     // // create the BreakIterator instance
     UErrorCode err = U_ZERO_ERROR;
-    BreakIterator *iterator = BreakIterator::createWordInstance(icuLocale, err);
+    icu_71::BreakIterator *iterator = icu_71::BreakIterator::createWordInstance(icuLocale, err);
     if (U_FAILURE(err)) {
-        ErrorCode errCode;
+        icu_71::ErrorCode errCode;
         errCode.set(err);
         throw Napi::TypeError::New(env, Napi::String::New(env, errCode.errorName()));
         // return;
@@ -50,7 +50,7 @@ Napi::Array GetWordBoundaryPositions(const Napi::CallbackInfo& info) {
     Napi::String textStr = info[0].ToString();
     Napi::String textValue(textStr);
     
-    UnicodeString uTextValue(textValue.ToString().Utf8Value().c_str(), "UTF-8");
+    icu_71::UnicodeString uTextValue(textValue.ToString().Utf8Value().c_str(), "UTF-8");
     if (uTextValue.isBogus()) {
         throw Napi::TypeError::New(env, Napi::String::New(env, "unable to create unicode string"));
         // return;
@@ -64,7 +64,7 @@ Napi::Array GetWordBoundaryPositions(const Napi::CallbackInfo& info) {
     int32_t currentBoundary = iterator->first();
     int32_t previousBoundary = 0;
 
-    while (currentBoundary != BreakIterator::DONE) {
+    while (currentBoundary != icu_71::BreakIterator::DONE) {
         if (currentBoundary > 0) {
             Napi::Object boundaryResult = Napi::Object::New(env);
             boundaryResult.Set(Napi::String::New(env, "start"), Napi::Number::New(env, previousBoundary));
