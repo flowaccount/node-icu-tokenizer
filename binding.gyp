@@ -50,11 +50,11 @@
           {
             "destination": "<(module_root_dir)/build/Release/",
             "files": [
-              '<(module_root_dir)/lib/windows/icudt71.dll', 
-              '<(module_root_dir)/lib/windows/icuin71.dll', 
-              '<(module_root_dir)/lib/windows/icuio71.dll', 
-              '<(module_root_dir)/lib/windows/icutu71.dll', 
-              '<(module_root_dir)/lib/windows/icuuc71.dll',
+              '<(module_root_dir)/lib/windows/icudt73.dll', 
+              '<(module_root_dir)/lib/windows/icuin73.dll', 
+              '<(module_root_dir)/lib/windows/icuio73.dll', 
+              '<(module_root_dir)/lib/windows/icutu73.dll', 
+              '<(module_root_dir)/lib/windows/icuuc73.dll',
             ]
           }
         ],
@@ -67,12 +67,12 @@
               '_GLIBCXX_USE_CXX11_ABI=0'
          ],
         'libraries': [
-          '<(module_root_dir)/lib/linux/libicudata.so.71',
-          '<(module_root_dir)/lib/linux/libicui18n.so.71', 
-          '<(module_root_dir)/lib/linux/libicuio.so.71', 
-          '<(module_root_dir)/lib/linux/libicutest.so.71',
-          '<(module_root_dir)/lib/linux/libicutu.so.71',
-          '<(module_root_dir)/lib/linux/libicuuc.so.71',
+          '<(module_root_dir)/lib/linux/libicudata.so.73',
+          '<(module_root_dir)/lib/linux/libicui18n.so.73', 
+          '<(module_root_dir)/lib/linux/libicuio.so.73', 
+          '<(module_root_dir)/lib/linux/libicutest.so.73',
+          '<(module_root_dir)/lib/linux/libicutu.so.73',
+          '<(module_root_dir)/lib/linux/libicuuc.so.73',
           '-Wl,-s -Wl,--disable-new-dtags -Wl,-rpath=\'$${ORIGIN}/../../lib/linux\''
         ],
       }],
